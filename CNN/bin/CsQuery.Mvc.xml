@@ -1,0 +1,1547 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CsQuery.Mvc</name>
+    </assembly>
+    <members>
+        <member name="T:CsQuery.Mvc.ClientScript.ScriptEnvironment">
+            <summary>
+            A class encapsulating the environment in which a script exists.
+            </summary>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptEnvironment.MapToAppRelativePath(System.String)">
+             <summary>
+             Converts a relative path or an app relative path to a rooted path (from the application root). Always starts with "/"
+             </summary>
+            
+             <param name="path">
+             Full pathname to search.
+             </param>
+            
+             <returns>
+             path as a string.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptEnvironment.ResolveParents(System.String)">
+             <summary>
+             Remove ../ when possible
+             </summary>
+            
+             <param name="path">
+             Full pathname to search.
+             </param>
+            
+             <returns>
+             A cleaner path
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptEnvironment.NormalizeSlashes(System.String)">
+             <summary>
+             Converts all backslashses to forward slashes
+             </summary>
+            
+             <param name="path">
+             Full pathname to search.
+             </param>
+            
+             <returns>
+             .
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptEnvironment.IsUrl(System.String)">
+             <summary>
+             Test if the path appears to be a remote URL.
+             </summary>
+            
+             <param name="path">
+             Full pathname of the file.
+             </param>
+            
+             <returns>
+             true if url, false if not.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptEnvironment.UniquePath(System.String)">
+             <summary>
+             Maps a path to a unique path: converts relative paths to the app rooted path (~/), and leaves
+             external paths alone.
+             </summary>
+            
+             <param name="path">
+             Full pathname to search.
+             </param>
+            
+             <returns>
+             A path.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptEnvironment.IsValidFileName(System.String)">
+             <summary>
+             Test if the path appears to be a valid file name
+             </summary>
+            
+             <param name="path">
+             Full pathname of the file.
+             </param>
+            
+             <returns>
+             true if valid file name, false if not.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptEnvironment.IsPhysicalFile(System.String)">
+             <summary>
+             Test if Path is a physical file
+             </summary>
+            
+             <param name="path">
+             Full pathname of the file.
+             </param>
+            
+             <returns>
+             true if physical file, false if not.
+             </returns>
+        </member>
+        <member name="P:CsQuery.Mvc.ClientScript.ScriptEnvironment.MapPath">
+            <summary>
+            The MapPath function to convert a path to a hard filesystem path
+            </summary>
+        </member>
+        <member name="P:CsQuery.Mvc.ClientScript.ScriptEnvironment.LibraryPath">
+            <summary>
+            Library path list to search
+            </summary>
+        </member>
+        <member name="P:CsQuery.Mvc.ClientScript.ScriptEnvironment.RelativePathRoot">
+            <summary>
+            The app relative path to the script, e.g. "~/" for the application root
+            </summary>
+        </member>
+        <member name="P:CsQuery.Mvc.ClientScript.ScriptEnvironment.ResolveUrl">
+            <summary>
+            Gets or sets the function to resolve a URL.
+            </summary>
+        </member>
+        <member name="P:CsQuery.Mvc.ClientScript.ScriptEnvironment.FileSystemRootPath">
+            <summary>
+            Gets the full pathname of the IIS root in the file system
+            </summary>
+        </member>
+        <member name="P:CsQuery.Mvc.ClientScript.ScriptEnvironment.AppRootPath">
+            <summary>
+            The application root path in the file system
+            </summary>
+        </member>
+        <member name="T:CsQuery.Mvc.ClientScript.Patterns">
+            <summary>
+            A set of RegexPatterns used to parse JavaScript files
+            </summary>
+        </member>
+        <member name="F:CsQuery.Mvc.ClientScript.Patterns.FileVersionRegex">
+            <summary>
+            The file version regular expression. This is exposed just as a string - it's embedded in other regexes
+            </summary>
+        </member>
+        <member name="F:CsQuery.Mvc.ClientScript.Patterns.WhiteSpace">
+            <summary>
+            A whitespace line
+            </summary>
+        </member>
+        <member name="F:CsQuery.Mvc.ClientScript.Patterns.StartComment">
+             <summary>
+             Gets a regex matching a line that is the start of a multiline comment. Will also match a full-
+             line comment. e.g.
+            
+                /* xxx
+             </summary>
+        </member>
+        <member name="F:CsQuery.Mvc.ClientScript.Patterns.EndComment">
+            <summary>
+            Matches the end of a multi-line comment block e.g.
+               xxx */
+            </summary>
+        </member>
+        <member name="F:CsQuery.Mvc.ClientScript.Patterns.FullLineComment">
+            <summary>
+             matches a single line comment, e.g. 
+               // xxx
+            ignoring whitespace. Will also eliminate any extra slashes opening the comment block.
+            </summary>
+        </member>
+        <member name="F:CsQuery.Mvc.ClientScript.Patterns.OneLineComment">
+            <summary>
+            matches a multi-line comment that is opened and closed on a single line, e.g. 
+               /* xxx */
+            ignoring whitespace
+            </summary>
+        </member>
+        <member name="F:CsQuery.Mvc.ClientScript.Patterns.Dependency">
+            <summary>
+            The regular expression dependency.
+            </summary>
+        </member>
+        <member name="F:CsQuery.Mvc.ClientScript.Patterns.Options">
+            <summary>
+            Gets a regex matching a line with file options, e.g. "using-options something somethineelse"
+            </summary>
+        </member>
+        <member name="F:CsQuery.Mvc.ClientScript.Patterns.NonLiteralFilenames">
+            <summary>
+            Regex to match file names with version info of the form x.y.z-beta (the - part optional)
+            </summary>
+        </member>
+        <member name="F:CsQuery.Mvc.ClientScript.Patterns.UriProtocol">
+            <summary>
+            Matches a URL starting with anything://
+            </summary>
+        </member>
+        <member name="T:CsQuery.Mvc.ClientScript.ScriptRef">
+            <summary>
+            A class representing a reference to a client script.
+            </summary>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptRef.#ctor">
+            <summary>
+            Default constructor.
+            </summary>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptRef.GetHashCode">
+             <summary>
+             Serves as a hash function for a particular type.
+             </summary>
+            
+             <returns>
+             A hash code for the current <see cref="T:System.Object" />.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptRef.Equals(System.Object)">
+             <summary>
+             Determines whether the specified <see cref="T:System.Object" /> is equal to the current
+             <see cref="T:System.Object" />.
+             </summary>
+            
+             <param name="obj">
+             The object to compare with the current object.
+             </param>
+            
+             <returns>
+             true if the specified <see cref="T:System.Object" /> is equal to the current
+             <see cref="T:System.Object" />; otherwise, false.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptRef.ToString">
+             <summary>
+             Returns a string that represents the current object.
+             </summary>
+            
+             <returns>
+             A string that represents the current object.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptRef.UpdateFrom(CsQuery.Mvc.ClientScript.ScriptRef)">
+             <summary>
+             Updates this script reference's details from another equivalent reference. (Will fail if they do not have the same name).
+             </summary>
+            
+             <param name="other">
+             The other script reference.
+             </param>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptRef.op_Equality(CsQuery.Mvc.ClientScript.ScriptRef,CsQuery.Mvc.ClientScript.ScriptRef)">
+             <summary>
+             Equality operator.
+             </summary>
+            
+             <param name="x">
+             The first instance to compare.
+             </param>
+             <param name="y">
+             The second instance to compare.
+             </param>
+            
+             <returns>
+             true if the parameters are considered equivalent.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptRef.op_Inequality(CsQuery.Mvc.ClientScript.ScriptRef,CsQuery.Mvc.ClientScript.ScriptRef)">
+             <summary>
+             Inequality operator.
+             </summary>
+            
+             <param name="x">
+             The first instance to compare.
+             </param>
+             <param name="y">
+             The second instance to compare.
+             </param>
+            
+             <returns>
+             true if the parameters are not considered equivalent.
+             </returns>
+        </member>
+        <member name="P:CsQuery.Mvc.ClientScript.ScriptRef.RelativePathRoot">
+            <summary>
+            Return the relative path root for this file, e.g. the path excluding the file name.
+            </summary>
+        </member>
+        <member name="P:CsQuery.Mvc.ClientScript.ScriptRef.Path">
+            <summary>
+            Virtual path to the dependency
+            </summary>
+        </member>
+        <member name="P:CsQuery.Mvc.ClientScript.ScriptRef.Resolved">
+            <summary>
+            Gets or sets a value indicating whether the dependency path has been resolved. 
+            </summary>
+        </member>
+        <member name="P:CsQuery.Mvc.ClientScript.ScriptRef.ScriptHash">
+            <summary>
+            A has that uniquely identifies the contents to prevent browser caching when they have changed
+            </summary>
+        </member>
+        <member name="P:CsQuery.Mvc.ClientScript.ScriptRef.NoCombine">
+            <summary>
+            When true, the script should not be combined but always loaded individually.
+            </summary>
+        </member>
+        <member name="P:CsQuery.Mvc.ClientScript.ScriptRef.Dependencies">
+             <summary>
+             Dependencies for this ScriptRef
+             </summary>
+            
+             <value>
+             The dependencies.
+             </value>
+        </member>
+        <member name="T:CsQuery.Mvc.DeferredCq">
+            <summary>
+            Encapsulate the deffered creation of the CQ object during processing a view, so it's never created if we don't need it.
+            </summary>
+        </member>
+        <member name="F:CsQuery.Mvc.DeferredCq.SourceHtml">
+            <summary>
+            Source HTML of the view.
+            </summary>
+        </member>
+        <member name="M:CsQuery.Mvc.DeferredCq.CaptureInstanceHtml(System.Action{System.Web.Mvc.ViewContext,System.IO.TextWriter,System.Object},System.Object)">
+            <summary>
+            If the instance is going to go out of scope, use this to ensure the deferred object remains
+            valid.
+            </summary>
+        </member>
+        <member name="P:CsQuery.Mvc.DeferredCq.Dom">
+            <summary>
+            Gets the dom, either already built or on demand.
+            </summary>
+        </member>
+        <member name="P:CsQuery.Mvc.DeferredCq.IsDomCreated">
+            <summary>
+            When true, the Dom object has been accessed and therefore constructed.
+            </summary>
+        </member>
+        <member name="T:CsQuery.Mvc.ViewEngineOptions">
+            <summary>
+            Flags that control operation of the CsQueryViewEngine
+            </summary>
+        </member>
+        <member name="F:CsQuery.Mvc.ViewEngineOptions.EnableScriptManager">
+            <summary>
+            Enables script manager functionality to resolve dependencies.
+            </summary>
+        </member>
+        <member name="F:CsQuery.Mvc.ViewEngineOptions.ProcessAllScripts">
+            <summary>
+            When set, all scripts (not just those created with @Html.Script) are resolved.
+            </summary>
+        </member>
+        <member name="F:CsQuery.Mvc.ViewEngineOptions.IgnoreMissingScripts">
+            <summary>
+            When set, scripts and dependencies that cannot be loaded will not cause an exception
+            </summary>
+        </member>
+        <member name="F:CsQuery.Mvc.ViewEngineOptions.NoMinifyScripts">
+            <summary>
+            When false, scripts will not be minified
+            </summary>
+        </member>
+        <member name="F:CsQuery.Mvc.ViewEngineOptions.NoCache">
+            <summary>
+            When set, caching is disabled. This results in the bundles being recreated on each page load, and scripts 
+            being re-analyzed for dependencies. (This is useful for debugging; otherwise, changes to javascript files
+            would not be refelected until the application is restarted)
+            </summary>
+        </member>
+        <member name="F:CsQuery.Mvc.ViewEngineOptions.NoBundle">
+            <summary>
+            When set, scripts are resolved, but not bundled.
+            </summary>
+        </member>
+        <member name="F:CsQuery.Mvc.ViewEngineOptions.ResolveXmlReferences">
+            <summary>
+            When true, the Visual Studio format XML &lt;reference ... &gt; tags will be resolved by the script manager as "using" 
+            </summary>
+        </member>
+        <member name="T:CsQuery.Mvc.ExtensionMethods">
+            <summary>
+            Extension methods that support MVC integration
+            </summary>
+        </member>
+        <member name="M:CsQuery.Mvc.ExtensionMethods.UrlSource(CsQuery.IDomObject)">
+             <summary>
+             Returns the value of the "src" or "href" attribute, depending on the element type. If non
+             applicable, returns empty string.
+             </summary>
+            
+             <param name="obj">
+             The obj to act on.
+             </param>
+            
+             <returns>
+             A string
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ExtensionMethods.Any``1(System.Collections.IEnumerable,System.Func{``0,System.Boolean})">
+             <summary>
+             Determine if any element in the list matches a predicate.
+             </summary>
+            
+             <typeparam name="T">
+             Generic type parameter.
+             </typeparam>
+             <param name="list">
+             The list to act on.
+             </param>
+             <param name="predicate">
+             The predicate.
+             </param>
+            
+             <returns>
+             true if the element is found, false if not.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ExtensionMethods.Any(System.Collections.IEnumerable,System.Object)">
+             <summary>
+             Determine if any element in the list equals the item passed by parameter
+             </summary>
+            
+             <param name="list">
+             The list to act on.
+             </param>
+             <param name="match">
+             The object to match
+             </param>
+            
+             <returns>
+             true if match is found in the list
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ExtensionMethods.ToList``1(System.Collections.IEnumerable)">
+             <summary>
+             Convert the sequence to a strongly-typed list. If an item cannot be cast as T, the list will
+             contain a null entry.
+             </summary>
+            
+             <typeparam name="T">
+             Generic type parameter.
+             </typeparam>
+             <param name="list">
+             The list to act on.
+             </param>
+            
+             <returns>
+             The sequence as a new List&lt;T&gt;
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ExtensionMethods.AfterLast(System.String,System.String)">
+             <summary>
+             Return the part of the string after the last occurrence of find
+             </summary>
+            
+             <param name="source">
+             The source to act on.
+             </param>
+             <param name="find">
+             The find to act on.
+             </param>
+            
+             <returns>
+             The part of the string after the last occurrence
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ExtensionMethods.Before(System.String,System.String)">
+             <summary>
+             Return the portion of a string before the first occurrence of "find", or the entire string if
+             it's not found.
+             </summary>
+            
+             <param name="source">
+             The source to act on.
+             </param>
+             <param name="find">
+             The find to act on.
+             </param>
+            
+             <returns>
+             The substring
+             </returns>
+        </member>
+        <member name="T:CsQuery.Mvc.CqHtmlString">
+            <summary>
+            Subclass of CQ that simply implements IHtmlString. The "ToHtmlString" method is already implemented
+            by the main object; but adding this interface to creates a requirement for a reference to System.Web
+            in non-MVC projects. We use this pass-through subclass to avoid that.
+            </summary>
+        </member>
+        <member name="M:CsQuery.Mvc.CqHtmlString.#ctor">
+            <summary>
+            Default constructor.
+            </summary>
+        </member>
+        <member name="M:CsQuery.Mvc.CqHtmlString.#ctor(System.String)">
+             <summary>
+             Create a CqHtmlString from HTML
+             </summary>
+            
+             <param name="html">
+             The HTML.
+             </param>
+        </member>
+        <member name="M:CsQuery.Mvc.CqHtmlString.NewCqUnbound">
+             <summary>
+             Creates a new instance of the CqHtmlString object.
+             </summary>
+            
+             <returns>
+             A new CQ object.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.CqHtmlString.ToHtmlString">
+             <summary>
+             Returns the complete HTML-encoded string of the selection set.
+             </summary>
+            
+             <returns>
+             An HTML-encoded string.
+             </returns>
+        </member>
+        <member name="T:CsQuery.Mvc.ScriptLocations">
+            <summary>
+            Values that represent a placement for a script
+            </summary>
+        </member>
+        <member name="F:CsQuery.Mvc.ScriptLocations.Inline">
+            <summary>
+            The script should remain at the location it was found in the markup.
+            </summary>
+        </member>
+        <member name="F:CsQuery.Mvc.ScriptLocations.Head">
+            <summary>
+            The script should be moved to HEAD.
+            </summary>
+        </member>
+        <member name="T:CsQuery.Mvc.HtmlHelpers">
+            <summary>
+            HTML helpers for CsQuery.MVC
+            </summary>
+        </member>
+        <member name="M:CsQuery.Mvc.HtmlHelpers.ServerSideInclude``1(System.Web.Mvc.HtmlHelper{``0},System.String)">
+             <summary>
+             Include an HTML file server-side.
+             </summary>
+            
+             <param name="helper">
+             The context.
+             </param>
+             <param name="serverPath">
+             Relative path of the server file.
+             </param>
+            
+             <returns>
+             An HTML string of the included file.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.HtmlHelpers.HtmlTag``1(System.Web.Mvc.HtmlHelper{``0},System.String)">
+             <summary>
+             Creates HTML for output using CsQuery.
+             </summary>
+            
+             <param name="helper">
+             The helper context.
+             </param>
+             <param name="html">
+             A string of valid HTML, or a single tag name, e.g "div".
+             </param>
+            
+             <returns>
+             A new CsQuery object.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.HtmlHelpers.Script``1(System.Web.Mvc.HtmlHelper{``0},System.String,System.Object,CsQuery.Mvc.ScriptLocations)">
+             <summary>
+             Includes a Javascript file inline.
+             </summary>
+            
+             <param name="helper">
+             The current helper context.
+             </param>
+             <param name="script">
+             Full pathname of the server file.
+             </param>
+             <param name="attributes">
+             (optional) the attributes.
+             </param>
+             <param name="location">
+             (optional) The location of the script. This parameter can be used to move the script into the
+             &lt;head&gt; tag of the document.
+             </param>
+            
+             <returns>
+             An HtmlString.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.HtmlHelpers.Script``1(System.Web.Mvc.HtmlHelper{``0},System.String,System.Object)">
+             <summary>
+             Includes a Javascript file inline.
+             </summary>
+            
+             <typeparam name="T">
+             Generic type parameter.
+             </typeparam>
+             <param name="helper">
+             The current helper context.
+             </param>
+             <param name="script">
+             Full pathname of the server file.
+             </param>
+             <param name="attributes">
+             (optional) the attributes.
+             </param>
+            
+             <returns>
+             An HtmlString.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.HtmlHelpers.Script``1(System.Web.Mvc.HtmlHelper{``0},System.String,CsQuery.Mvc.ScriptLocations)">
+             <summary>
+             Includes a Javascript file inline.
+             </summary>
+            
+             <typeparam name="T">
+             Generic type parameter.
+             </typeparam>
+             <param name="helper">
+             The current helper context.
+             </param>
+             <param name="script">
+             Full pathname of the server file.
+             </param>
+             <param name="location">
+             (optional) The location of the script. This parameter can be used to move the script into the
+             &lt;head&gt; tag of the document.
+             </param>
+            
+             <returns>
+             An HtmlString.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.HtmlHelpers.Script``1(System.Web.Mvc.HtmlHelper{``0},System.String)">
+             <summary>
+             Includes a Javascript file inline.
+             </summary>
+            
+             <typeparam name="T">
+             Generic type parameter.
+             </typeparam>
+             <param name="helper">
+             The current helper context.
+             </param>
+             <param name="script">
+             Full pathname of the server file.
+             </param>
+            
+             <returns>
+             An HtmlString.
+             </returns>
+        </member>
+        <member name="T:CsQuery.Mvc.CsQueryController">
+            <summary>
+            An MVC controller providing access to a CQ object created from the HTML output of an MVC page.
+            </summary>
+        </member>
+        <member name="T:CsQuery.Mvc.ICsQueryController">
+            <summary>
+            An interface that identfies a controller as a target for CsQuery HTML processing
+            </summary>
+        </member>
+        <member name="P:CsQuery.Mvc.ICsQueryController.Doc">
+            <summary>
+            The CsQuery representation of the HTML before rendering.
+            </summary>
+        </member>
+        <member name="P:CsQuery.Mvc.CsQueryController.Doc">
+            <summary>
+            The CsQuery representation of the HTML before rendering.
+            </summary>
+        </member>
+        <member name="P:CsQuery.Mvc.CsQueryController.Deferred">
+            <summary>
+            Gets or sets the deferred CQ object; this optimizes the parsing of pages so nothing happens
+            if the object is never accessed.
+            </summary>
+        </member>
+        <member name="T:CsQuery.Mvc.CsQueryView">
+             <summary>
+             A custom view that provides access to a CQ object of the html before it is output. When used
+             as the view engine for a controller marked with ICsQueryController, it will populate the one
+             property of that interface "Dom" with a CQ object representing the final HTML for this view,
+             and then call for the following methods:
+             
+             
+             void Cq_Start()     // called for any action first
+             
+             void Cq_Action()    // called for a specfic action
+             
+             void Cq_End()       // called for any action last
+             
+             
+             void Cq_PartialViewName()          // called whenever the partial view
+                                                // that matches either the  file name
+             
+             void Cq_Action_PartialViewName()   // caled whenever the matching partial view is
+                                                // rendered just for this action.
+             </summary>
+            
+             <remarks>   James Treworgy, 7/1/2012. </remarks>
+        </member>
+        <member name="M:CsQuery.Mvc.CsQueryView.#ctor(System.Web.Mvc.ControllerContext,System.String,System.String,System.Boolean,System.Collections.Generic.IEnumerable{System.String},System.Boolean)">
+             <summary>
+             Constructor for CsQueryView
+             </summary>
+            
+             <param name="controllerContext">
+             Context for the controller.
+             </param>
+             <param name="viewPath">
+             Full pathname of the view file.
+             </param>
+             <param name="layoutPath">
+             Full pathname of the layout file.
+             </param>
+             <param name="runViewStartPages">
+             true to run view start pages.
+             </param>
+             <param name="viewStartFileExtensions">
+             The view start file extensions.
+             </param>
+             <param name="isPartial">
+             true if this object is partial.
+             </param>
+        </member>
+        <member name="M:CsQuery.Mvc.CsQueryView.#ctor(System.Web.Mvc.ControllerContext,System.String,System.String,System.Boolean,System.Collections.Generic.IEnumerable{System.String},System.Web.Mvc.IViewPageActivator,System.Boolean)">
+             <summary>
+             Constructor for a CsQueryView
+             </summary>
+            
+             <param name="controllerContext">
+             Context for the controller.
+             </param>
+             <param name="viewPath">
+             Full pathname of the view file.
+             </param>
+             <param name="layoutPath">
+             Full pathname of the layout file.
+             </param>
+             <param name="runViewStartPages">
+             true to run view start pages.
+             </param>
+             <param name="viewStartFileExtensions">
+             The view start file extensions.
+             </param>
+             <param name="viewPageActivator">
+             The view page activator.
+             </param>
+             <param name="isPartial">
+             true if this object is partial.
+             </param>
+        </member>
+        <member name="F:CsQuery.Mvc.CsQueryView.HasCqMethodsRef">
+            <summary>
+            A lookup of ClassName, indicating whether to bother with CQ for this controller
+            </summary>
+        </member>
+        <member name="F:CsQuery.Mvc.CsQueryView.CqMethods">
+            <summary>
+            A map of ClassName+ActonName to a method
+            </summary>
+        </member>
+        <member name="M:CsQuery.Mvc.CsQueryView.RenderView(System.Web.Mvc.ViewContext,System.IO.TextWriter,System.Object)">
+            <summary>
+            Intercept rendering and create a CsQuery object
+            </summary>
+            <param name="viewContext"></param>
+            <param name="writer"></param>
+            <param name="instance"></param>
+        </member>
+        <member name="M:CsQuery.Mvc.CsQueryView.ManageScripts(CsQuery.CQ,System.Web.Mvc.WebViewPage,System.Web.Mvc.ViewContext)">
+             <summary>
+             Manage scripts.
+             </summary>
+            
+             <param name="cqDoc">
+             The cq document.
+             </param>
+             <param name="viewPage">
+             The view page.
+             </param>
+             <param name="viewContext">
+             The active view context
+             </param>
+        </member>
+        <member name="M:CsQuery.Mvc.CsQueryView.ParseInstance(System.Object)">
+            <summary>
+            Return a structure contiaining the filename only part of a partial view, and the full
+            unique name of the view including its relative path concatenated with underscores
+            to match a method name.
+            </summary>
+            <param name="instance"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CsQuery.Mvc.CsQueryView.HasCqMethods(System.Type,System.String)">
+             <summary>
+             Determine if a type contains CQ controller methods
+             </summary>
+            
+             <param name="controllerType">
+             Type of the controller.
+             </param>
+             <param name="controllerName">
+             Name of the controller.
+             </param>
+            
+             <returns>
+             true if it has cq methods, false if not.
+             </returns>
+        </member>
+        <member name="P:CsQuery.Mvc.CsQueryView.LibraryPath">
+            <summary>
+            Gets or sets the strings in the library file search path. 
+            </summary>
+        </member>
+        <member name="P:CsQuery.Mvc.CsQueryView.Options">
+            <summary>
+            Options for controlling the operation of the view
+            </summary>
+        </member>
+        <member name="T:CsQuery.Mvc.CsQueryViewEngine">
+            <summary>
+            Custom implementation of RazorViewEngine to support CsQuery processing
+            </summary>
+        </member>
+        <member name="M:CsQuery.Mvc.CsQueryViewEngine.Create">
+            <summary>
+            Create a new CsQueryViewEngine
+            </summary>
+        </member>
+        <member name="M:CsQuery.Mvc.CsQueryViewEngine.#ctor">
+            <summary>
+            Default constructor.
+            </summary>
+        </member>
+        <member name="M:CsQuery.Mvc.CsQueryViewEngine.CreatePartialView(System.Web.Mvc.ControllerContext,System.String)">
+             <summary>
+             Creates a partial view using the specified controller context and partial path.
+             </summary>
+            
+             <param name="controllerContext">
+             The controller context.
+             </param>
+             <param name="partialPath">
+             The path to the partial view.
+             </param>
+            
+             <returns>
+             The partial view.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.CsQueryViewEngine.CreateView(System.Web.Mvc.ControllerContext,System.String,System.String)">
+             <summary>
+             Creates a view by using the specified controller context and the paths of the view and master
+             view.
+             </summary>
+            
+             <param name="controllerContext">
+             The controller context.
+             </param>
+             <param name="viewPath">
+             The path to the view.
+             </param>
+             <param name="masterPath">
+             The path to the master view.
+             </param>
+            
+             <returns>
+             The view.
+             </returns>
+        </member>
+        <member name="P:CsQuery.Mvc.CsQueryViewEngine.Options">
+            <summary>
+            Options for the CsQueryViewEngine
+            </summary>
+        </member>
+        <member name="P:CsQuery.Mvc.CsQueryViewEngine.LibraryPath">
+            <summary>
+            List of relative paths to search for included files.
+            </summary>
+        </member>
+        <member name="M:CsQuery.Mvc.Helpers.HasCqSignature(System.Reflection.MethodInfo)">
+             <summary>
+             Return true if the reflected method appears to be a CsQuery target method.
+             </summary>
+            
+             <exception cref="T:System.ArgumentException">
+             Thrown when one or more arguments have unsupported or illegal values.
+             </exception>
+            
+             <param name="mi">
+             The MethodInfo to test
+             </param>
+            
+             <returns>
+             true the method has a CQ method signature, false if not
+             </returns>
+        </member>
+        <member name="T:CsQuery.Mvc.ClientScript.PathList">
+            <summary>
+            A list of virtual paths
+            </summary>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.PathList.IndexOf(System.String)">
+             <summary>
+             Return the ordinal index of the item
+             </summary>
+            
+             <param name="item">
+             The item.
+             </param>
+            
+             <returns>
+             An integer index
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.PathList.Insert(System.Int32,System.String)">
+             <summary>
+             Inserts the item into the PathList at the specified position
+             </summary>
+            
+             <param name="index">
+             Zero-based index of the.
+             </param>
+             <param name="item">
+             The item.
+             </param>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.PathList.RemoveAt(System.Int32)">
+             <summary>
+             Removes at the item found at the specified index
+             </summary>
+            
+             <param name="index">
+             Zero-based index of the.
+             </param>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.PathList.Add(System.String)">
+             <summary>
+             Adds the item to the PathList.
+             </summary>
+            
+             <param name="item">
+             The item.
+             </param>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.PathList.Clear">
+            <summary>
+            Clears this object to its blank/initial state.
+            </summary>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.PathList.Contains(System.String)">
+             <summary>
+             Test if the item is found in the PathList 
+             </summary>
+            
+             <param name="item">
+             The item.
+             </param>
+            
+             <returns>
+             true if the object is in this collection, false if not.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.PathList.CopyTo(System.String[],System.Int32)">
+             <summary>
+             Copies the contents of the PathList collection to an array
+             </summary>
+            
+             <param name="array">
+             The array.
+             </param>
+             <param name="arrayIndex">
+             Zero-based index of the array.
+             </param>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.PathList.Remove(System.String)">
+             <summary>
+             Removes the given item from the PathList collection
+             </summary>
+            
+             <param name="item">
+             The item.
+             </param>
+            
+             <returns>
+             true if it succeeds, false if it fails.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.PathList.GetEnumerator">
+             <summary>
+             Gets the enumerator.
+             </summary>
+            
+             <returns>
+             The enumerator.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.PathList.TryGetName(System.String,System.String@)">
+             <summary>
+             Test whether a path maps to something in this PathList; if so, return the name-normalized
+             path.
+             </summary>
+            
+             <param name="virtualPath">
+             Full pathname of the virtual file.
+             </param>
+             <param name="name">
+             [out] The name.
+             </param>
+            
+             <returns>
+             The name for path.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.PathList.GetName(System.String)">
+             <summary>
+             Given a virtual path, returns the normal name (not including the library root part of the path) if the path is
+             within the library. If it is not, it returns the original path in name-normalized form.
+             </summary>
+            
+             <param name="virtualPath">
+             Full pathname of the virtual file.
+             </param>
+            
+             <returns>
+             The name.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.PathList.NormalizePath(System.String,System.Boolean)">
+             <summary>
+             Normalizes a path name by adding virtual notation and removing trailing slashes.
+             </summary>
+            
+             <param name="virtualPath">
+             Full pathname of the virtual file.
+             </param>
+             <param name="trailingSlash">
+             (optional) Adds (or preserves) a trailing slash, e.g. treat this as a location and not a file.
+             </param>
+            
+             <returns>
+             A normalized path.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.PathList.NormalizeName(System.String)">
+             <summary>
+             Normalize a path to a name, e.g. remove relative bases, and ensure there is an extension.
+             </summary>
+            
+             <param name="virtualPath">
+             Full pathname of the virtual file.
+             </param>
+            
+             <returns>
+             A normalized name like "folder/script.js"
+             </returns>
+        </member>
+        <member name="P:CsQuery.Mvc.ClientScript.PathList.AllowedExtensions">
+            <summary>
+            A set of file extensions that are allowed for included files. These should not include the
+            dot, only the extension.
+            </summary>
+        </member>
+        <member name="P:CsQuery.Mvc.ClientScript.PathList.Item(System.Int32)">
+             <summary>
+             Indexer to get or set items within this collection using array index syntax.
+             </summary>
+            
+             <param name="index">
+             Zero-based index of the entry to access.
+             </param>
+            
+             <returns>
+             The indexed item.
+             </returns>
+        </member>
+        <member name="P:CsQuery.Mvc.ClientScript.PathList.Count">
+            <summary>
+            Gets the number of items in the PathList collection
+            </summary>
+        </member>
+        <member name="P:CsQuery.Mvc.ClientScript.PathList.IsReadOnly">
+            <summary>
+            Gets a value indicating whether this object is read only.
+            </summary>
+        </member>
+        <member name="T:CsQuery.Mvc.ClientScript.ScriptCollection">
+            <summary>
+            Collection of scripts used by the ScriptManager, and methods to process them
+            </summary>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptCollection.#ctor(CsQuery.Mvc.ClientScript.ScriptEnvironment)">
+             <summary>
+             Constructor for Script Collection.
+             </summary>
+            
+             <param name="scriptEnvironment">
+             The ScriptEnvironment for this collection
+             </param>
+        </member>
+        <member name="F:CsQuery.Mvc.ClientScript.ScriptCollection.Scripts">
+            <summary>
+            The file paths at the top level (the members of this collection)
+            </summary>
+        </member>
+        <member name="F:CsQuery.Mvc.ClientScript.ScriptCollection.DependenciesOrdered">
+            <summary>
+            The dependencies in the order the were resolved
+            </summary>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptCollection.AddFromCq(CsQuery.CQ)">
+             <summary>
+             Adds inputs from all the scripts found in a CQ object.
+             </summary>
+            
+             <param name="scripts">
+             The scripts.
+             </param>
+            
+             <returns>
+             The first script with dependencies
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptCollection.AddPath(System.String)">
+             <summary>
+             Adds a script reference by path.
+             </summary>
+            
+             <param name="virtualPath">
+             Virtual path to the script.
+             </param>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptCollection.GetDependencies">
+             <summary>
+             Return dependencies found in the document.
+             </summary>
+            
+             <returns>
+             An enumerator that allows foreach to be used to process get dependencies in this collection.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptCollection.GetHashCode">
+             <summary>
+             Serves as a hash function for a particular type.
+             </summary>
+            
+             <returns>
+             A hash code for the current <see cref="T:CsQuery.Mvc.ClientScript.ScriptCollection"/>.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptCollection.Equals(System.Object)">
+             <summary>
+             Determines whether the specified <see cref="T:CsQuery.Mvc.ClientScript.ScriptCollection"/> is equal to the current
+             <see cref="T:CsQuery.Mvc.ClientScript.ScriptCollection"/>.
+             </summary>
+            
+             <param name="obj">
+             The object to compare with the current object.
+             </param>
+            
+             <returns>
+             true if the objects are the same; false otherwise.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptCollection.GetDependencies(System.Collections.Generic.IEnumerable{CsQuery.Mvc.ClientScript.ScriptRef})">
+             <summary>
+             Return dependencies found in a sequence of files.
+             </summary>
+            
+             <exception cref="T:System.IO.FileNotFoundException">
+             Thrown when the requested file is not present.
+             </exception>
+            
+             <param name="sources">
+             The sources.
+             </param>
+            
+             <returns>
+             An enumerator that allows foreach to be used to process get dependencies in this collection.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptCollection.GetScriptRef(System.String)">
+             <summary>
+             Gets a script reference given a path.
+             </summary>
+            
+             <param name="virtualPath">
+             Virtual path to the script.
+             </param>
+            
+             <returns>
+             The script reference.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptCollection.TryGetDependencyRef_CQ(CsQuery.Mvc.ClientScript.ScriptRef,CsQuery.IDomObject,CsQuery.Mvc.ClientScript.ScriptRef@)">
+             <summary>
+             Try get dependency reference from a "reference" element.
+             </summary>
+            
+             <param name="parent">
+             The parent.
+             </param>
+             <param name="element">
+             The element.
+             </param>
+             <param name="scriptRef">
+             The relative path to the file to analyze.
+             </param>
+            
+             <returns>
+             true if it succeeds, false if it fails.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptCollection.TryGetDependencyRef_UsingFormat(CsQuery.Mvc.ClientScript.ScriptRef,System.String,CsQuery.Mvc.ClientScript.ScriptRef@)">
+             <summary>
+             Analyzes a line and returns a dependency ScriptRef if it matches the "using xxx" format.
+             </summary>
+            
+             <param name="parent">
+             The parent.
+             </param>
+             <param name="line">
+             The line.
+             </param>
+             <param name="scriptRef">
+             The relative path to the file to analyze.
+             </param>
+            
+             <returns>
+             The dependency reference using format.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptCollection.GetDependencies(CsQuery.Mvc.ClientScript.ScriptRef)">
+             <summary>
+             Return dependencies in the form of a virtual file path, e.g "~/scripts/something.js" for each
+             "//using xxx" found in a single file.
+             </summary>
+            
+             <exception cref="T:System.IO.FileNotFoundException">
+             Thrown when the requested file is not present.
+             </exception>
+            
+             <param name="scriptRef">
+             The relative path to the file to analyze.
+             </param>
+            
+             <returns>
+             An enumerator that allows foreach to be used to process get dependencies in this collection.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptCollection.PathToLibraryFile(System.String)">
+             <summary>
+             Searches the LibraryPath for a match for this file.
+             </summary>
+            
+             <remarks>
+             TODO: Optimize this to cache information about which files are in which paths so we don't
+             have to look up every time. (Or is this worth it, since the overall bundles are cached?)
+             </remarks>
+            
+             <param name="fileName">
+             Filename of the file.
+             </param>
+            
+             <returns>
+             The found dependency.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptCollection.GetBestMatchingFile(System.String,System.String)">
+             <summary>
+             Gets best matching file given a path and a regex. 
+             </summary>
+            
+             <param name="path">
+             Full pathname to search
+             </param>
+             <param name="regexFilePattern">
+             A pattern specifying the regular expression pattern to match against files.
+             </param>
+            
+             <returns>
+             The best matching file, or null if none matches.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptCollection.IsFileRelativePath(System.String)">
+             <summary>
+             The file is a relative path - is not rooted and is not ~/ rooted to the app.
+             </summary>
+            
+             <param name="file">
+             The file.
+             </param>
+            
+             <returns>
+             true if relative path, false if not.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptCollection.Add(CsQuery.Mvc.ClientScript.ScriptRef)">
+             <summary>
+             Adds a script path.
+             </summary>
+            
+             <param name="item">
+             The item to add.
+             </param>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptCollection.Clear">
+            <summary>
+            Clears this object to its blank/initial state.
+            </summary>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptCollection.Contains(CsQuery.Mvc.ClientScript.ScriptRef)">
+             <summary>
+             Test whether the item is present in the collection
+             </summary>
+            
+             <param name="item">
+             The ScriptRef to test for containment.
+             </param>
+            
+             <returns>
+             true if the object is in this collection, false if not.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptCollection.CopyTo(CsQuery.Mvc.ClientScript.ScriptRef[],System.Int32)">
+             <summary>
+             Copies the collection to an array
+             </summary>
+            
+             <param name="array">
+             The array.
+             </param>
+             <param name="arrayIndex">
+             Zero-based index of the array.
+             </param>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptCollection.Remove(CsQuery.Mvc.ClientScript.ScriptRef)">
+             <summary>
+             Removes the item from the script collection
+             </summary>
+            
+             <param name="item">
+             The item to remove.
+             </param>
+            
+             <returns>
+             true if the item was removed, false if it didn't exist
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptCollection.GetEnumerator">
+             <summary>
+             Gets the enumerator.
+             </summary>
+            
+             <returns>
+             The enumerator.
+             </returns>
+        </member>
+        <member name="P:CsQuery.Mvc.ClientScript.ScriptCollection.Options">
+            <summary>
+            Gets or sets options for controlling the operation.
+            </summary>
+        </member>
+        <member name="P:CsQuery.Mvc.ClientScript.ScriptCollection.IgnoreErrors">
+             <summary>
+             Gets or sets a value indicating whether to ignore errors.
+             </summary>
+            
+             <value>
+             true if ignore errors, false if not.
+             </value>
+        </member>
+        <member name="P:CsQuery.Mvc.ClientScript.ScriptCollection.Count">
+            <summary>
+            Gets the number of items in the ScriptCollection 
+            </summary>
+        </member>
+        <member name="P:CsQuery.Mvc.ClientScript.ScriptCollection.IsReadOnly">
+            <summary>
+            Gets a value indicating whether this object is read only; a ScriptCollection is never read
+            only.
+            </summary>
+        </member>
+        <member name="T:CsQuery.Mvc.ClientScript.ScriptManager">
+            <summary>
+            A class to manage JavaScript dependencies. Comments at the top of the file in the form
+              //using somelibrary
+            
+            will be resolved into "~/somelibrary.js", and themselves searched for other dependencies. All
+            dependencies found will be bundled, and the bundle URL inserted as a new script.
+            </summary>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptManager.#ctor">
+            <summary>
+            Default constructor; creates this ScriptManager for the active HttpContext.MapPath
+            </summary>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptManager.#ctor(CsQuery.Mvc.ClientScript.ScriptEnvironment)">
+             <summary>
+             Creates a ScriptManager for the ScriptEnvironment data passed
+             </summary>
+            
+             <param name="env">
+             The environment.
+             </param>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptManager.#ctor(CsQuery.Mvc.ClientScript.PathList,System.Func{System.String,System.String},System.Func{System.String,System.String})">
+             <summary>
+             Default constructor; creates this ScriptManager for the specified library path &amp; MapPath
+             function.
+             </summary>
+            
+             <exception cref="T:System.ArgumentException">
+             Thrown when one or more arguments have unsupported or illegal values.
+             </exception>
+            
+             <param name="libraryPath">
+             The paths in the library search path.
+             </param>
+             <param name="mapPathFunc">
+             The map path function.
+             </param>
+             <param name="resolveUrlFunc">
+             A function to resolve relative URLs
+             </param>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptManager.#ctor(System.Func{System.String,System.String},System.Func{System.String,System.String})">
+             <summary>
+             Creates this ScriptManager with an empty LibraryPath.
+             </summary>
+            
+             <exception cref="T:System.ArgumentException">
+             Thrown when one or more arguments have unsupported or illegal values.
+             </exception>
+            
+             <param name="mapPathFunc">
+             The map path function.
+             </param>
+             <param name="resolveUrlFunc">
+             A function to resolve relative URLs.
+             </param>
+        </member>
+        <member name="F:CsQuery.Mvc.ClientScript.ScriptManager.ScriptID">
+            <summary>
+            Identifier used to generate unique IDs for the generated script bundles
+            </summary>
+        </member>
+        <member name="F:CsQuery.Mvc.ClientScript.ScriptManager.Bundles">
+            <summary>
+            Cache of bundles. If a ScriptCollection is built for a page that matches one built previously,
+            we will reuse the bundle rather than recreating the dependency table.
+            </summary>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptManager.ResolveScriptDependencies(CsQuery.CQ)">
+             <summary>
+             Resolve all script dependencies in the bound CQ document. Scripts that cotain a "data-
+             location='head'" attribute will be moved to the head.
+             </summary>
+            
+             <param name="doc">
+             The document to resolve.
+             </param>
+        </member>
+        <member name="P:CsQuery.Mvc.ClientScript.ScriptManager.Options">
+            <summary>
+            Gets or sets options that control the operation of the ScriptManager.
+            </summary>
+        </member>
+        <member name="F:CsQuery.Mvc.ClientScript.ScriptParser.InMultilineComment">
+            <summary>
+            When true the parser is currently in a multilinecomment
+            </summary>
+        </member>
+        <member name="F:CsQuery.Mvc.ClientScript.ScriptParser.InComment">
+             <summary>
+             Gets or sets a value indicating whether the last read line is a comment.
+             </summary>
+            
+             <value>
+             false if there are embedded comments inside code in a line, or no comment, and true only when
+             the entire line is a commment.
+             </value>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptParser.ReadLine">
+             <summary>
+             Reads the next line from the file, stripping out comment markers (instead, setting the "InComment" property)
+             and setting properties based on the contents of the line.
+             </summary>
+            
+             <returns>
+             The line.
+             </returns>
+        </member>
+        <member name="M:CsQuery.Mvc.ClientScript.ScriptParser.GetMD5Hash(System.String)">
+             <summary>
+             Calculate an MD5 hash for the string
+             </summary>
+            
+             <param name="input">
+             String to hash
+             </param>
+            
+             <returns>
+             The hash
+             </returns>
+        </member>
+        <member name="P:CsQuery.Mvc.ClientScript.ScriptParser.IsPhysicalFile">
+            <summary>
+            When true, this script represents a physical file in the filesystem. If false, it is either
+            invalid, or resolved in another way.
+            </summary>
+        </member>
+        <member name="P:CsQuery.Mvc.ClientScript.ScriptParser.FileData">
+            <summary>
+            The full text of the file
+            </summary>
+        </member>
+        <member name="P:CsQuery.Mvc.ClientScript.ScriptParser.FileHash">
+            <summary>
+            SHA1 has for the file data
+            </summary>
+        </member>
+        <member name="P:CsQuery.Mvc.ClientScript.ScriptParser.AnyCodeYet">
+             <summary>
+             When true, indicates that non-whitespace, non-code lines have been parsed already.
+             </summary>
+            
+             <value>
+             true if code has been found yet.
+             </value>
+        </member>
+    </members>
+</doc>
